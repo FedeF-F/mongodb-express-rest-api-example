@@ -1,19 +1,16 @@
+import { MongoClient } from "mongodb";
 
-const { MongoClient } = require("mongodb");
-const connectionString = process.env.ATLAS_URI;
-const client = new MongoClient(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connectionString = process.env.ATLAS_URI || "";
 
-let dbConnection;
+const client = new MongoClient(connectionString);
 
-module.exports = {
-  connectToServer: function (callback) {
-    // Implement Database connection
-  },
+let conn;
+try {
+  conn = await client.connect();
+} catch(e) {
+  console.error(e);
+}
 
-  getDb: function () {
-    return dbConnection;
-  },
-};
+let db = conn.db("sample_training");
+
+export default db;
